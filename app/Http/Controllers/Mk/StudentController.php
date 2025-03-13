@@ -23,8 +23,6 @@ use App\Models\Mk\EduForm;
 use App\Models\Mk\EduType;
 use App\Models\Mk\Faculty;
 use App\Models\Mk\Room;
-use App\Models\Mk\StdOrderType;
-use App\Models\Mk\StdOrder;
 use PDF;
 
 class StudentController extends Controller
@@ -36,7 +34,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-       // $students = Student::with('group')->get();
+        // $students = Student::with('group')->get();
 
         $student = Student::paginate(10); // 50 tadan sahifalash
 
@@ -79,7 +77,7 @@ class StudentController extends Controller
         $regions = Region::where('status', 1)->get();
 
         $country = Country::all();
-//        $faculty = Faculty::all();
+        $faculty = Faculty::all();
         $edu_type = EduType::all();
         $edu_form = EduForm::all();
         $Room = Room::all();
@@ -91,7 +89,7 @@ class StudentController extends Controller
 
             'room' => $Room,
             'today' => $date,
-//            'faculty' => $faculty,
+            'faculty' => $faculty,
             'edu_type' => $edu_type,
             'edu_form' => $edu_form,
             'this_year' => $this_year,
@@ -128,8 +126,8 @@ class StudentController extends Controller
             'enter_year'               => ['required'],
             'enter_order'               => ['required', 'max:33', 'string'],
             'enter_order_date'               => ['required'],
-            'faculty'               => ['required'],
-            'direction'               => ['required'],
+            'faculty_id'               => ['required', 'int'],
+            'direction_id'               => ['required', 'int'],
             'edu_form_id'               => ['required', 'int'],
             'is_contract'               => ['required', 'int'],
             'graduated_year'               => ['required'],
@@ -144,14 +142,10 @@ class StudentController extends Controller
             // 'room_id'               => ['required', 'int'],
 
         ]);
+        
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput()->with('error', 'a');
         }
-
-        $request->birthday = date('Y-m-d', strtotime($request->birthday));
-        $request->enter_order_date = date('Y-m-d', strtotime($request->enter_order_date));
-        $request->graduated_order_date = date('Y-m-d', strtotime($request->graduated_order_date));
-
 
         $new_student = new Student();
 
@@ -166,9 +160,9 @@ class StudentController extends Controller
         $new_student->enter_year = $request->enter_year;
         $new_student->enter_order = $request->enter_order;
         $new_student->enter_order_date = $request->enter_order_date;
-        $new_student->faculty = $request->faculty;
+        $new_student->faculty_id = $request->faculty_id;
         $new_student->is_contract = $request->is_contract;
-        $new_student->direction = $request->direction;
+        $new_student->direction_id = $request->direction_id;
         $new_student->edu_form_id = $request->edu_form_id;
         $new_student->graduated_year = $request->graduated_year;
         $new_student->graduated_order = $request->graduated_order;
@@ -180,11 +174,9 @@ class StudentController extends Controller
         $new_student->topografiya_nomeri = $request->topografiya_nomeri;
         $new_student->royhat_raqami = $request->royhat_raqami;
         $new_student->room_id = $request->room_id;
-        $new_student->privileged = $request->privileged;
         $new_student->created_by = Auth::id();
         if ($new_student->save()) {
             return redirect()->route('student.create')->with('success', 'Talaba qo`shildi');
-
             // return redirect()->route('student.show', $new_student->id)->with('success', 'Talaba qo`shildi');
         }
 
@@ -199,26 +191,14 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-
-//        return 1;
-
         $student = Student::find($id);
-
-        if(!$student){
-            return view('errors.404');
-        }
         $countries = Country::all();
         $regions = Region::all();
-
-        $order_types = StdOrderType::where('status', 1)->get();
-        $orders = StdOrder::where('student_id', $id)->where('status', 1)->get();
-
         return view('mk.pages.student.show', [
             'data' => $student,
             'countries' => $countries,
             'regions' => $regions,
-            'order_types' => $order_types,
-            'orders' => $orders,
+
         ]);
     }
 
@@ -254,7 +234,7 @@ class StudentController extends Controller
         $minpassportdate = date("Y-m-d", strtotime("-10 year", strtotime($date)));
 
 
-// return $student;
+        // return $student;
 
         return view('mk.pages.student.editstd', [
 
@@ -289,8 +269,8 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-//                return $id;
-//                return $request;
+        //                return $id;
+        //                return $request;
 
         $input = $request->all();
 
@@ -314,7 +294,7 @@ class StudentController extends Controller
         $update_student = Student::find($id);
         $update_student->first_name = $request->first_name;
 
-        //
+        // 
 
         $update_student->last_name = $request->last_name;
         $update_student->first_name = $request->first_name;
@@ -327,9 +307,9 @@ class StudentController extends Controller
         $update_student->enter_year = $request->enter_year;
         $update_student->enter_order = $request->enter_order;
         $update_student->enter_order_date = $request->enter_order_date;
-        $update_student->faculty = $request->faculty;
+        $update_student->faculty_id = $request->faculty_id;
         $update_student->is_contract = $request->is_contract;
-        $update_student->direction = $request->direction;
+        $update_student->direction_id = $request->direction_id;
         $update_student->edu_form_id = $request->edu_form_id;
         $update_student->graduated_year = $request->graduated_year;
         $update_student->graduated_order = $request->graduated_order;
@@ -343,7 +323,7 @@ class StudentController extends Controller
         $update_student->room_id = $request->room_id;
         $update_student->updated_by = Auth::id();
 
-        //
+        // 
 
         if ($update_student->update()) {
             return redirect()->route('student.index', $update_student->id)->with('success', 'A');
@@ -367,73 +347,5 @@ class StudentController extends Controller
         } else {
             return redirect()->back()->with('danger', "Topilmadi");
         }
-    }
-
-    public function std_order(Request $request, $student_id)
-    {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-
-            'description'               => ['required', 'max:255', 'string'],
-            'name'                => ['required', 'max:255', 'string'],
-            'std_order_type_id'   => ['required', 'int'],
-            'date'                => ['required', 'date'],
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput()->with('error', 'a');
-        }
-
-        $std_order_new = new StdOrder();
-        $std_order_new->status = 1;
-        $std_order_new->std_order_type_id = $request->std_order_type_id;
-        $std_order_new->student_id = $student_id;
-        $std_order_new->date = $request->date;
-        $std_order_new->name = $request->name;
-        $std_order_new->description = $request->description;
-
-        if ($std_order_new->save()) {
-            return redirect()->back()->with('success', 'a');
-        } else {
-            return redirect()->back()->with('error', 'a');
-        }
-
-    }
-
-    public function student_pdf($id){
-
-        $student = Student::find($id);
-
-        $edu_type = EduType::all();
-
-        $mudir =  DB::table('archive_mudir')->orderBy('id', 'DESC')->get();
-
-        return PDF::loadView('mk.pages.student.pdf_student', [
-            'student' => $student,
-            'enter_date' => date("Y", strtotime($student->enter_order_date)),
-            'graduate_date' =>  date("Y", strtotime($student->graduated_order_date)),
-            'edu_type' => $edu_type,
-            'mudir' => $mudir
-        ])->download('new.pdf');
-
-
-//        return PDF::loadView('admin.pages.staff.resume' , [
-//            'data' => $staff,
-//            'relative'=>$relarive,
-//            'education'=>$education,
-//
-//            'workplaces'=>$workplaces,
-//            'mukofot_all'=>$mukofot_all,
-//        ])->download($staff->last_name.$staff->first_name.'.pdf');
-    }
-
-    public function std_order_delete($id)
-    {
-        $order = StdOrder::findOrFail($id);
-
-        $order->delete();
-
-        return redirect()->back();
     }
 }

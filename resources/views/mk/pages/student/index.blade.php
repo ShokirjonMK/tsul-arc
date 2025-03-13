@@ -6,7 +6,6 @@
 
             text-align: center;
         }
-
     </style>
     <div class="main-container">
 
@@ -40,15 +39,17 @@
                                         <td> {{ $item->fio() }} </td>
                                         <td> {{ $item->enter_year }} | {{ $item->enter_order }} |
                                             {{ $item->enter_order_date }} </td>
-                                             <td> {{ $item->graduated_year }} | {{ $item->graduated_order }} |
+                                        <td> {{ $item->graduated_year }} | {{ $item->graduated_order }} |
                                             {{ $item->graduated_order_date }} </td>
                                         <td> @isset($item->room)
                                                 {{ $item->room->name }}
                                             @endisset </td>
                                         <td class="last-td">
-                                            <a class="p-2" href="{{ route('student.show', ['student' => $item->id]) }}"><i
+                                            <a class="p-2"
+                                                href="{{ route('student.show', ['student' => $item->id]) }}"><i
                                                     class="dw dw-eye"></i></a>
-                                            <a class="p-2" href="{{ route('student.edit', ['student' => $item->id]) }}"><i
+                                            <a class="p-2"
+                                                href="{{ route('student.edit', ['student' => $item->id]) }}"><i
                                                     class="dw dw-edit2"></i></a>
 
                                             <a data-toggle="modal" id="smallButton" data-target="#smallModal"
@@ -90,11 +91,19 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 
 @section('js')
+    {{-- JS kod sahifalashni yashirish uchun --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let pagination = document.querySelector(".dataTables_paginate");
+            if (pagination) {
+                pagination.style.display = "none";
+            }
+        });
+    </script>
+
     <script>
         // display a modal (small modal)
         $(document).on('click', '#smallButton', function(event) {

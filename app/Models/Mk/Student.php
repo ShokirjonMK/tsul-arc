@@ -63,14 +63,14 @@ class Student extends Model
     {
         return $this->belongsTo('App\Models\Mk\Room');
     }
-//    public function faculty()
-//    {
-//        return $this->belongsTo('App\Models\Mk\Faculty');
-//    }
-//    public function direction()
-//    {
-//        return $this->belongsTo('App\Models\Mk\Direction');
-//    }
+    public function faculty()
+    {
+        return $this->belongsTo('App\Models\Mk\Faculty');
+    }
+    public function direction()
+    {
+        return $this->belongsTo('App\Models\Mk\Direction');
+    }
     public function region()
     {
         return $this->belongsTo('App\Models\Region', 'region_id', 'id');
