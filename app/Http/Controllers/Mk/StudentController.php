@@ -67,8 +67,8 @@ class StudentController extends Controller
             });
         }
 
-
-        $students = $query->paginate(10);
+        // ID bo‘yicha kamayish tartibida saralash
+        $students = $query->orderBy('id', 'desc')->paginate(10);
 
         return view('mk.pages.student.index', compact('students', 'eduTypes', 'eduForms'));
     }
