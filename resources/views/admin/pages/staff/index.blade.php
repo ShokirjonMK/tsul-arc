@@ -20,6 +20,54 @@
                         </a>
                     </div>
 
+                    <form method="GET" action="{{ route('student.index') }}" class="mb-3 ml-5 mr-5">
+                        <div class="row">
+                            <!-- Ta'lim turi filter (EduType model orqali) -->
+                            <div class="col-md-2">
+                                <label for="academic_degree">Ilmiy daraja</label>
+                                <select name="academic_degree" id="academic_degree" class="form-control">
+                                    <option value="">Barchasi</option>
+                                    @foreach ($academic_degree as $academic_deg)
+                                        <option value="{{ $academic_deg->id }}"
+                                            {{ request('academic_degree') == $academic_deg->id ? 'selected' : '' }}>
+                                            {{ $academic_deg->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="degree">Ilmiy unvon</label>
+                                <select name="degree" id="degree" class="form-control">
+                                    <option value="">Barchasi</option>
+                                    @foreach ($degree as $degreeOne)
+                                        <option value="{{ $degreeOne->id }}"
+                                            {{ request('degree') == $degreeOne->id ? 'selected' : '' }}>
+                                            {{ $degreeOne->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="fio">F.I.O bo‘yicha qidirish
+                                    <i class="fa fa-info-circle text-primary" data-toggle="tooltip" data-placement="top"
+                                        title="Masalan: 'abd sher' deb qidirsangiz 'Abdiyev Sherzod' natija chiqadi."></i>
+                                </label>
+                                <input type="text" name="fio" id="fio" class="form-control"
+                                    value="{{ request('fio') }}" placeholder="Ism, familiya yoki otasining ismi">
+                            </div>
+
+
+
+                            <!-- Qidirish tugmasi -->
+                            <div class="col-md-3 align-self-end">
+                                <button type="submit" class="btn btn-primary">Filtrlash</button>
+                                <a href="{{ route('student.index') }}" class="btn btn-secondary">Tozalash</a>
+                            </div>
+                        </div>
+                    </form>
+
+
                     <div class="pb-20">
                         <table class=" data-table-export table stripe hover nowrap">
                             <thead>
@@ -34,9 +82,10 @@
                             </thead>
                             <tbody>
                                 @php  $i=1; @endphp
-                                @foreach ($data as $item)
+                                @foreach ($data as $key => $item)
                                     <tr>
-                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $data->firstItem() + $key }}</td>
+
                                         <td> {{ $item->fio() }} </td>
                                         <td> {{ $item->begin_at }} </td>
                                         <td> {{ $item->end_at }} </td>
@@ -60,27 +109,48 @@
                                     </tr @endforeach
                             </tbody>
                         </table>
+                        <div class="d-flex justify-content-between align-items-center mt-3 ml-5 mr-5">
+                            <div>
+                                <strong>Jami xodimlar soni: {{ $data->total() }}</strong>
+                            </div>
+                            <div>
+                                {{ $data->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
-
         </div>
-    </div>
-@endsection
+    @endsection
 
-@section('js')
-    <script src="{{ asset('assets/admin/src/plugins/switchery/switchery.min.js') }}"></script>
-    <!-- bootstrap-tagsinput js -->
-    <script src="{{ asset('assets/admin/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js') }}"></script>
-    <!-- bootstrap-touchspin js -->
-    <script src="{{ asset('assets/admin/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js') }}"></script>
-    <script src="{{ asset('assets/admin/vendors/scripts/advanced-components.js') }}"></script>
+    @section('js')
+        {{-- JS kod sahifalashni yashirish uchun --}}
+        <script>
+            $(document).ready(function() {
+                let table = $('.data-table-export').DataTable();
+                table.destroy(); // Avvalgi DataTable'ni o‘chirish
+                $('.data-table-export').DataTable({
+                    "paging": false, // Sahifalashni o‘chirish
+                    "info": false, // Pastki yozuvlarni yashirish
+                    "ordering": false, // Saralashni o‘chirish
+                    "searching": false // Qidiruvni o‘chirish
+                });
+            });
+        </script>
 
-    <script>
-        $('.button-delete').on('click', function() {
-            if (confirm('Ma`lumotni o`chirasizmi?')) {
-                $('.deleteform' + $(this).attr('itemid')).submit()
-            }
-        })
-    </script>
-@endsection
+        <script src="{{ asset('assets/admin/src/plugins/switchery/switchery.min.js') }}"></script>
+        <!-- bootstrap-tagsinput js -->
+        <script src="{{ asset('assets/admin/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js') }}"></script>
+        <!-- bootstrap-touchspin js -->
+        <script src="{{ asset('assets/admin/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js') }}"></script>
+        <script src="{{ asset('assets/admin/vendors/scripts/advanced-components.js') }}"></script>
+
+        <script>
+            $('.button-delete').on('click', function() {
+                if (confirm('Ma`lumotni o`chirasizmi?')) {
+                    $('.deleteform' + $(this).attr('itemid')).submit()
+                }
+            })
+        </script>
+    @endsection

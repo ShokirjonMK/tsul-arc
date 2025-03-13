@@ -60,7 +60,7 @@
             <p style="text-indent: 50px; margin-top: 0;">
                 O‘zbekiston Respublikasi Prezidentining 2013-yil 28-iyundagi “Yuridik kadrlar tayyorlash tizimini yanada
                 takomillashtirish chora- tadbirlari to‘g‘risida”gi PQ–1990-son qaroriga asosan Toshkent davlat yuridik
-                instituti Toshkent davlat yuridik universiteti etib qayta tashkil etilgan
+                instituti Toshkent davlat yuridik universiteti etib qayta tashkil etilgan.
             </p>
         </div>
 

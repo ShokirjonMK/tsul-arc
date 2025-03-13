@@ -34,6 +34,7 @@ use App\Models\StDep;
 use App\Models\Staff;
 use App\Models\Area;
 use App\Models\Lang;
+use App\Models\Mk\Room;
 use PDF;
 
 class StaffController extends Controller
@@ -43,11 +44,39 @@ class StaffController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $staff = Staff::all();
+        $query = Staff::query();
+
+        $academic_degree = AcademicDegree::all();
+        $degree = Degree::where('status', 1)->get();
+
+
+        if ($request->filled('graduated_year')) {
+            $query->where('graduated_year', $request->graduated_year);
+        }
+
+
+        // F.I.O. bo‘yicha filter (first_name, last_name, middle_name)
+        if ($request->filled('fio')) {
+            $searchTerms = explode(' ', $request->fio); // Matnni bo‘shliqlarga ajratish
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where(function ($q2) use ($term) {
+                        $q2->where('first_name', 'LIKE', "%{$term}%")
+                            ->orWhere('last_name', 'LIKE', "%{$term}%")
+                            ->orWhere('middle_name', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+        $staff = $query->orderBy('id', 'desc')->paginate(10);
+
         return view('admin.pages.staff.index', [
             'data' => $staff,
+            'academic_degree' => $academic_degree,
+            'degree' => $degree
         ]);
     }
 
@@ -75,12 +104,13 @@ class StaffController extends Controller
         $country = Country::all();
         $nationalities = Nationality::where('status', 1)->get();
         $diplom_types = DiplomType::where('status', 1)->get();
-        $degree_info = DegreeInfo::where('status', 1)->get();
+        $degree_info = DegreeInfo::where('status', 1)->orderBy('order', 'ASC')->get();
         $stavka = Stavka::where('status', 1)->get();
-        $academic_degree = AcademicDegree::where('status', 1)->get();
+        $academic_degree = AcademicDegree::where('status', 1)->where('is_deleted', 0)->get();
         $degree = Degree::where('status', 1)->get();
         $special_degree = SpecialDegree::where('status', 1)->get();
         $language = Lang::where('status', 1)->get();
+        $rooms = Room::all();
         // return $nationalities;
         return view('admin.pages.staff.create', [
             'education' => $education,
@@ -101,6 +131,7 @@ class StaffController extends Controller
             'date18' => $maxdateofbirth,
             'date80' => $mindateofbirth,
             'minpassportdate' => $minpassportdate,
+            'rooms' => $rooms
 
         ]);
     }
