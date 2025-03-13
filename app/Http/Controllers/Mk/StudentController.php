@@ -219,8 +219,8 @@ class StudentController extends Controller
         $new_student->room_id = $request->room_id;
         $new_student->created_by = Auth::id();
         if ($new_student->save()) {
-            return redirect()->route('student.create')->with('success', 'Talaba qo`shildi');
-            // return redirect()->route('student.show', $new_student->id)->with('success', 'Talaba qo`shildi');
+            // return redirect()->route('student.create')->with('success', 'Talaba qo`shildi');
+            return redirect()->route('student.show', $new_student->id)->with('success', 'Talaba qo`shildi');
         }
 
         return redirect()->back()->with('error', 'AAA');
