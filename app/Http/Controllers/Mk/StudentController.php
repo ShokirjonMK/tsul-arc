@@ -23,6 +23,8 @@ use App\Models\Mk\EduForm;
 use App\Models\Mk\EduType;
 use App\Models\Mk\Faculty;
 use App\Models\Mk\Room;
+use App\Models\Mk\StdOrder;
+use App\Models\Mk\StdOrderType;
 use PDF;
 
 class StudentController extends Controller
@@ -237,11 +239,16 @@ class StudentController extends Controller
         $student = Student::find($id);
         $countries = Country::all();
         $regions = Region::all();
+
+        $order_types = StdOrderType::where('status', 1)->get();
+        $orders = StdOrder::where('student_id', $id)->where('status', 1)->get();
+
         return view('mk.pages.student.show', [
             'data' => $student,
             'countries' => $countries,
             'regions' => $regions,
-
+            'order_types' => $order_types,
+            'orders' => $orders,
         ]);
     }
 
