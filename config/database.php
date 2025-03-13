@@ -49,7 +49,7 @@ return [
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             
-            'database' => 'tsul-archive',
+            'database' => 'tsul_archive',
             'username' => 'root',
             'password' => '',
 

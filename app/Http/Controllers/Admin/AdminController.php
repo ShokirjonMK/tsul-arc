@@ -21,7 +21,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        /*
+
         $shatat_count = Department::all()->sum('count_workers');
         //return $count;
 
@@ -57,28 +57,28 @@ class AdminController extends Controller
         }
 
         //return $free_shtat_f;
-*/
+
         return view("admin.index", [
-            // 'shatat_count' => $shatat_count,
-            // 'free_shtat' => $free_shtat,
-            // 'darajasiz_count' => $darajasiz_count,
-            // 'darajasiz_count1' => $darajasiz_count1,
-            // 'inner_shtat' => $inner_shtat,
-            // 'prof_count' => $prof_count,
-            // 'unvonli_count' => $unvonli_count,
-            // 'unvonsiz_count' => $unvonsiz_count,
-            // 'adliya_count' => $adliya_count,
-            // 'outer_shtat' => $outer_shtat,
-            // 'all_staff' => $all_staff,
-            // 'dot_count' => $dot_count,
-            // 'cond_count' => $cond_count,
-            // 'doc_count' => $doc_count,
-            // 'all_teacher' => $all_teacher,
-            // 'jami_xodimlar' => round($jami_xodimlar, 0),
-            // 'teacher_xodimlar' => round($teacher_xodimlar, 0),
-            // 'free_shtat_f' => round($free_shtat_f, 0),
-            // 'inner_shtat_f' => round($inner_shtat_f, 0),
-            // 'outer_shtat_f' => round($outer_shtat_f, 0),
+            'shatat_count' => $shatat_count,
+            'free_shtat' => $free_shtat,
+            'darajasiz_count' => $darajasiz_count,
+            'darajasiz_count1' => $darajasiz_count1,
+            'inner_shtat' => $inner_shtat,
+            'prof_count' => $prof_count,
+            'unvonli_count' => $unvonli_count,
+            'unvonsiz_count' => $unvonsiz_count,
+            'adliya_count' => $adliya_count,
+            'outer_shtat' => $outer_shtat,
+            'all_staff' => $all_staff,
+            'dot_count' => $dot_count,
+            'cond_count' => $cond_count,
+            'doc_count' => $doc_count,
+            'all_teacher' => $all_teacher,
+            'jami_xodimlar' => round($jami_xodimlar, 0),
+            'teacher_xodimlar' => round($teacher_xodimlar, 0),
+            'free_shtat_f' => round($free_shtat_f, 0),
+            'inner_shtat_f' => round($inner_shtat_f, 0),
+            'outer_shtat_f' => round($outer_shtat_f, 0),
 
         ]);
     }

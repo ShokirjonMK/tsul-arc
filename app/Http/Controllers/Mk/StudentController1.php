@@ -25,7 +25,7 @@ use App\Models\Mk\Faculty;
 use App\Models\Mk\Room;
 use PDF;
 
-class StudentController extends Controller
+class StudentController1 extends Controller
 {
     /**
      * Display a listing of the resource.

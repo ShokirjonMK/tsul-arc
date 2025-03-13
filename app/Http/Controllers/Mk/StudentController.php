@@ -32,7 +32,50 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+    {
+        $query = Student::query();
+        $eduTypes = EduType::all(); // Ta'lim turlarini olish
+        $eduForms = EduForm::all(); // Ta'lim turlarini olish
+
+        // Bitirgan yil bo‘yicha filter
+        if ($request->filled('graduated_year')) {
+            $query->where('graduated_year', $request->graduated_year);
+        }
+
+        // Ta'lim turi bo‘yicha filter
+        if ($request->filled('education_type')) {
+            $query->where('edu_type_id', $request->education_type);
+        }
+
+        // Ta'lim shakli bo‘yicha filter
+        if ($request->filled('education_form')) {
+            $query->where('edu_form_id', $request->education_form);
+        }
+
+        // F.I.O. bo‘yicha filter (first_name, last_name, middle_name)
+        if ($request->filled('fio')) {
+            $searchTerms = explode(' ', $request->fio); // Matnni bo‘shliqlarga ajratish
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where(function ($q2) use ($term) {
+                        $q2->where('first_name', 'LIKE', "%{$term}%")
+                            ->orWhere('last_name', 'LIKE', "%{$term}%")
+                            ->orWhere('middle_name', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+        }
+
+
+        $students = $query->paginate(10);
+
+        return view('mk.pages.student.index', compact('students', 'eduTypes', 'eduForms'));
+    }
+
+
+
+    public function index111()
     {
         // $students = Student::with('group')->get();
 
@@ -142,7 +185,7 @@ class StudentController extends Controller
             // 'room_id'               => ['required', 'int'],
 
         ]);
-        
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput()->with('error', 'a');
         }
