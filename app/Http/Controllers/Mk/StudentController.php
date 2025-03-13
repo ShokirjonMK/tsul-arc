@@ -253,6 +253,34 @@ class StudentController extends Controller
     }
 
 
+    public function student_pdf($id)
+    {
+
+        $student = Student::find($id);
+
+        $edu_type = EduType::all();
+
+        $mudir =  DB::table('archive_mudir')->orderBy('id', 'DESC')->get();
+
+        return PDF::loadView('mk.pages.student.pdf_student', [
+            'student' => $student,
+            'enter_date' => date("Y", strtotime($student->enter_order_date)),
+            'graduate_date' =>  date("Y", strtotime($student->graduated_order_date)),
+            'edu_type' => $edu_type,
+            'mudir' => $mudir
+        ])->download('new.pdf');
+
+
+        //        return PDF::loadView('admin.pages.staff.resume' , [
+        //            'data' => $staff,
+        //            'relative'=>$relarive,
+        //            'education'=>$education,
+        //
+        //            'workplaces'=>$workplaces,
+        //            'mukofot_all'=>$mukofot_all,
+        //        ])->download($staff->last_name.$staff->first_name.'.pdf');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
