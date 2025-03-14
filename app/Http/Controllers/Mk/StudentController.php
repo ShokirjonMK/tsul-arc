@@ -281,6 +281,37 @@ class StudentController extends Controller
         //        ])->download($staff->last_name.$staff->first_name.'.pdf');
     }
 
+    public function std_order(Request $request, $student_id)
+    {
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+
+            'description'               => ['required', 'max:255', 'string'],
+            'name'                => ['required', 'max:255', 'string'],
+            'std_order_type_id'   => ['required', 'int'],
+            'date'                => ['required', 'date'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput()->with('error', 'a');
+        }
+
+        $std_order_new = new StdOrder();
+        $std_order_new->status = 1;
+        $std_order_new->std_order_type_id = $request->std_order_type_id;
+        $std_order_new->student_id = $student_id;
+        $std_order_new->date = $request->date;
+        $std_order_new->name = $request->name;
+        $std_order_new->description = $request->description;
+
+        if ($std_order_new->save()) {
+            return redirect()->back()->with('success', 'a');
+        } else {
+            return redirect()->back()->with('error', 'a');
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
