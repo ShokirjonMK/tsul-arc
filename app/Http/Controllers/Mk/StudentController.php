@@ -486,9 +486,13 @@ class StudentController extends Controller
         $update_student->enter_year = $request->enter_year;
         $update_student->enter_order = $request->enter_order;
         $update_student->enter_order_date = $request->enter_order_date;
-        $update_student->faculty_id = $request->faculty_id;
+        // $update_student->faculty_id = $request->faculty_id;
+        // $update_student->direction_id = $request->direction_id;
+
+        $update_student->direction = $request->direction;
+        $update_student->faculty = $request->faculty;
+
         $update_student->is_contract = $request->is_contract;
-        $update_student->direction_id = $request->direction_id;
         $update_student->edu_form_id = $request->edu_form_id;
         $update_student->graduated_year = $request->graduated_year;
         $update_student->graduated_order = $request->graduated_order;
