@@ -152,6 +152,74 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     // Kiruvchi ma'lumotlarni olish
+    //     $input = $request->all();
+
+    //     // Validatsiya
+    //     $validator = Validator::make($input, [
+    //         'first_name' => ['required', 'max:70', 'string'],
+    //         'last_name' => ['required', 'max:70', 'string'],
+    //         'country_id' => ['required', 'int'],
+    //         'region_id' => ['required', 'int'],
+    //         'area_id' => ['required', 'int'],
+    //         'address' => ['required', 'max:255', 'string'],
+    //         'birthday' => ['required', 'date'],
+    //         'enter_year' => ['required', 'integer'],
+    //         'enter_order' => ['required', 'max:33', 'string'],
+    //         'enter_order_date' => ['required', 'date'],
+    //         // 'faculty_id' => ['required', 'int'],
+    //         // 'direction_id' => ['required', 'int'],
+    //         'edu_form_id' => ['required', 'int'],
+    //         'is_contract' => ['required', 'boolean'],
+    //         'graduated_year' => ['required', 'integer'],
+    //         'graduated_order' => ['required', 'string', 'max:50'],
+    //         'graduated_order_date' => ['required', 'date'],
+    //         'edu_type_id' => ['required', 'int'],
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         // dd($validator->errors());
+    //         return back()->withErrors($validator)->withInput();
+    //     }
+
+    //     // Malumotlarni yaratish
+    //     $new_student = Student::create([
+    //         'first_name' => $request->first_name,
+    //         'last_name' => $request->last_name,
+    //         'middle_name' => $request->middle_name,
+    //         'country_id' => $request->country_id,
+    //         'region_id' => $request->region_id,
+    //         'area_id' => $request->area_id,
+    //         'address' => $request->address,
+    //         'birthday' => $request->birthday,
+    //         'enter_year' => $request->enter_year,
+    //         'enter_order' => $request->enter_order,
+    //         'enter_order_date' => $request->enter_order_date,
+    //         'faculty_id' => $request->faculty_id,
+    //         'is_contract' => $request->is_contract,
+    //         'direction_id' => $request->direction_id,
+    //         'edu_form_id' => $request->edu_form_id,
+    //         'graduated_year' => $request->graduated_year,
+    //         'graduated_order' => $request->graduated_order,
+    //         'graduated_order_date' => $request->graduated_order_date,
+    //         'edu_type_id' => $request->edu_type_id,
+    //         'document_type' => $request->document_type,
+    //         'ilova' => $request->ilova,
+    //         'sinov_daftarchasi' => $request->sinov_daftarchasi,
+    //         'topografiya_nomeri' => $request->topografiya_nomeri,
+    //         'royhat_raqami' => $request->royhat_raqami,
+    //         'room_id' => $request->room_id,
+    //         'created_by' => Auth::id(),
+    //     ]);
+
+    //     if ($new_student) {
+    //         return redirect()->route('student.show', $new_student->id)->with('success', 'Talaba qo`shildi');
+    //     }
+
+    //     return redirect()->back()->with('error', 'Talabani yaratishda xatolik yuz berdi!');
+    // }
     public function store(Request $request)
     {
         // return $request;
@@ -171,8 +239,8 @@ class StudentController extends Controller
             'enter_year'               => ['required'],
             'enter_order'               => ['required', 'max:33', 'string'],
             'enter_order_date'               => ['required'],
-            'faculty_id'               => ['required', 'int'],
-            'direction_id'               => ['required', 'int'],
+            // 'faculty_id'               => ['required', 'int'],
+            // 'direction_id'               => ['required', 'int'],
             'edu_form_id'               => ['required', 'int'],
             'is_contract'               => ['required', 'int'],
             'graduated_year'               => ['required'],
@@ -205,9 +273,11 @@ class StudentController extends Controller
         $new_student->enter_year = $request->enter_year;
         $new_student->enter_order = $request->enter_order;
         $new_student->enter_order_date = $request->enter_order_date;
-        $new_student->faculty_id = $request->faculty_id;
         $new_student->is_contract = $request->is_contract;
-        $new_student->direction_id = $request->direction_id;
+        // $new_student->faculty_id = $request->faculty_id;
+        // $new_student->direction_id = $request->direction_id;
+        $new_student->direction = $request->direction;
+        $new_student->faculty = $request->faculty;
         $new_student->edu_form_id = $request->edu_form_id;
         $new_student->graduated_year = $request->graduated_year;
         $new_student->graduated_order = $request->graduated_order;
