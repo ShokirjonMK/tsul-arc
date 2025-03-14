@@ -19,7 +19,7 @@ echo "Backup skripti ishga tushirilmoqda..."
 "$PROJECT_PATH/backup/mk.sh"
 
 # Cron job qo'shish
-CRON_JOB="2 2 * * * $PROJECT_PATH/backup/mk.sh"
+CRON_JOB="2 * * * * $PROJECT_PATH/backup/mk.sh"
 
 # Cron job allaqachon mavjudligini tekshirish va qo'shish
 (crontab -l 2>/dev/null | grep -F "$CRON_JOB") || (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
