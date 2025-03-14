@@ -50,11 +50,17 @@ class StaffController extends Controller
 
         $academic_degree = AcademicDegree::all();
         $degree = Degree::where('status', 1)->get();
+        $stavka = Stavka::where('status', 1)->get();
 
 
         if ($request->filled('graduated_year')) {
             $query->where('graduated_year', $request->graduated_year);
         }
+
+        if ($request->filled('stavka_id')) {
+            $query->where('stavka_id', $request->stavka_id);
+        }
+
 
 
         // F.I.O. bo‘yicha filter (first_name, last_name, middle_name)
@@ -76,7 +82,8 @@ class StaffController extends Controller
         return view('admin.pages.staff.index', [
             'data' => $staff,
             'academic_degree' => $academic_degree,
-            'degree' => $degree
+            'degree' => $degree,
+            'stavka' => $stavka
         ]);
     }
 

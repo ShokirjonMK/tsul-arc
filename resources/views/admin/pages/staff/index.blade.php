@@ -20,7 +20,7 @@
                         </a>
                     </div>
 
-                    <form method="GET" action="{{ route('student.index') }}" class="mb-3 ml-5 mr-5">
+                    <form method="GET" action="{{ route('staff.index') }}" class="mb-3 ml-5 mr-5">
                         <div class="row">
                             <!-- Ta'lim turi filter (EduType model orqali) -->
                             <div class="col-md-2">
@@ -47,7 +47,18 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                            <div class="col-md-2">
+                                <label for="stavka_id">Ish stavkasi</label>
+                                <select name="stavka_id" id="stavka_id" class="form-control">
+                                    <option value="">Barchasi</option>
+                                    @foreach ($stavka as $stavkaOne)
+                                        <option value="{{ $stavkaOne->id }}"
+                                            {{ request('stavka_id') == $stavkaOne->id ? 'selected' : '' }}>
+                                            {{ $stavkaOne->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="col-md-3">
                                 <label for="fio">F.I.O bo‘yicha qidirish
                                     <i class="fa fa-info-circle text-primary" data-toggle="tooltip" data-placement="top"
@@ -62,7 +73,7 @@
                             <!-- Qidirish tugmasi -->
                             <div class="col-md-3 align-self-end">
                                 <button type="submit" class="btn btn-primary">Filtrlash</button>
-                                <a href="{{ route('student.index') }}" class="btn btn-secondary">Tozalash</a>
+                                <a href="{{ route('staff.index') }}" class="btn btn-secondary">Tozalash</a>
                             </div>
                         </div>
                     </form>
