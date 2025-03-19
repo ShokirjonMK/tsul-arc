@@ -104,10 +104,10 @@ class Student extends Model
     {
         return $this->belongsTo('App\Models\ParentWorkPlaceType', 'parent_work_place_type_id', 'id');
     }
-    public function disability_type()
-    {
-        return $this->belongsTo('App\Models\DisabilityType', 'disability_type_id', 'id');
-    }
+    // public function disability_type()
+    // {
+    //     return $this->belongsTo('App\Models\DisabilityType', 'disability_type_id', 'id');
+    // }
     public function social_protection_type()
     {
         return $this->belongsTo('App\Models\SocialProtectionType', 'social_protection_type_id', 'id');
