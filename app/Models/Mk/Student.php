@@ -100,22 +100,22 @@ class Student extends Model
     {
         return $this->belongsTo('App\Models\CircleType', 'circle_type_id', 'id');
     }
-    public function parent_work_place_type()
-    {
-        return $this->belongsTo('App\Models\ParentWorkPlaceType', 'parent_work_place_type_id', 'id');
-    }
+    // public function parent_work_place_type()
+    // {
+    //     return $this->belongsTo('App\Models\ParentWorkPlaceType', 'parent_work_place_type_id', 'id');
+    // }
     // public function disability_type()
     // {
     //     return $this->belongsTo('App\Models\DisabilityType', 'disability_type_id', 'id');
     // }
-    public function social_protection_type()
-    {
-        return $this->belongsTo('App\Models\SocialProtectionType', 'social_protection_type_id', 'id');
-    }
-    public function edu_home_type()
-    {
-        return $this->belongsTo('App\Models\EduHomeType', 'edu_home_type_id', 'id');
-    }
+    // public function social_protection_type()
+    // {
+    //     return $this->belongsTo('App\Models\SocialProtectionType', 'social_protection_type_id', 'id');
+    // }
+    // public function edu_home_type()
+    // {
+    //     return $this->belongsTo('App\Models\EduHomeType', 'edu_home_type_id', 'id');
+    // }
     public function additional_files()
     {
         return $this->hasMany(AdditionalFile::class, 'student_id', 'id');
