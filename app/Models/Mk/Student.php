@@ -59,6 +59,11 @@ class Student extends Model
     {
         return $this->last_name . ' ' . $this->first_name;
     }
+    public function eduForm()
+    {
+        return $this->belongsTo('App\Models\Mk\EduForm');
+    }
+
     public function room()
     {
         return $this->belongsTo('App\Models\Mk\Room');

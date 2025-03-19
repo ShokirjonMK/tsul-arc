@@ -28,6 +28,7 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             'faculty',
             'direction',
             'edutype',
+            'eduForm',
             'room',
             'nationality',
             // 'circle_type',
@@ -93,7 +94,6 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             "Kirish buyrug‘i sanasi",
             "Fakultet",
             "Yo‘nalish",
-            "Shartnoma turi",
             "Ta’lim turi",
             "Bitirgan yil",
             "Bitirgan buyrug‘i",
@@ -121,8 +121,6 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             "Ota-onaning ish joyi turi",
             "Ta’lim uyi turi",
             "Qo‘shimcha ma’lumot",
-            "Pasport nusxasi",
-            "Diplom nusxasi",
             "Pasport JSHIR",
             "Imtiyoz"
         ];
@@ -145,20 +143,20 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             $student->enter_order_date,
             $student->faculty ? $student->faculty  : ($student->faculty_id ? optional($student->faculty)->name : null),
             $student->direction ? $student->direction  : ($student->direction_id ? optional($student->direction)->name : null),
-            $student->contract(), // Shu yerda noto‘g‘ri chaqirilgan bo‘lishi mumkin edi
             $student->edutype ? $student->edutype->name : null,
             $student->graduated_year,
             $student->graduated_order,
             $student->graduated_order_date,
             $student->diplom_serial,
             $student->diplom_number,
-            // $student->edu_home_type ? $student->edu_home_type->name : null,
+            $student->eduForm ? $student->eduForm->name : null,
             $student->document_type,
             $student->ilova,
             $student->sinov_daftarchasi,
             $student->topografiya_nomeri,
             $student->royhat_raqami,
             $student->room ? $student->room->name : null,
+            $student->citizenship ?? null,
             $student->nationality ? $student->nationality->name : null,
             $student->gender == 1 ? 'Erkak' : 'Ayol',
             $student->passport_seria,
@@ -166,15 +164,15 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             $student->passport_given_date,
             $student->phone1,
             $student->phone2,
+            $student->contract(), // Shu yerda noto‘
             $student->disability_type,
             $student->social_protection_type,
             $student->parent_work_place_type,
             $student->edu_home_type,
             $student->additional_information,
-            $student->passport_copy,
-            $student->diplom_copy,
             $student->passport_jshir,
             $student->privileged ? 'Ha' : 'Yo‘q',
+
         ];
     }
 }
