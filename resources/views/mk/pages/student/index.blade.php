@@ -85,9 +85,9 @@
                                 <a href="{{ route('student.index') }}" class="btn btn-secondary">Tozalash</a>
                             </div>
                             <div class="col-md-2 align-self-end">
-                                <a href="{{ route('students.export-excel', request()->query()) }}" class="btn btn-success">
+                                {{-- <a href="{{ route('students.export-excel', request()->query()) }}" class="btn btn-success">
                                     <i class="fas fa-file-excel"></i>
-                                </a>
+                                </a> --}}
 
                             </div>
                         </div>
