@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-2 align-self-end">
                                 <a href="{{ route('students.export-excel', request()->query()) }}" class="btn btn-success">
-                                    <i class="fas fa-file-excel">Excel</i>
+                                    <i class="fas fa-file-excel"></i> Excel
                                 </a>
 
                             </div>
