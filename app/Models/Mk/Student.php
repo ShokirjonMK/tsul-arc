@@ -65,7 +65,7 @@ class Student extends Model
     }
     public function faculty()
     {
-        return $this->belongsTo('App\Models\Mk\Faculty');
+        return $this->belongsTo('App\Models\Mk\Faculty', 'faculty_id', 'id');
     }
     public function direction()
     {
@@ -80,13 +80,13 @@ class Student extends Model
         return $this->belongsTo('App\Models\Area', 'area_id', 'id');
     }
 
-    public function contracttype()
-    {
-        return $this->belongsTo('App\Models\Contracttype');
-    }
+    // public function contracttype()
+    // {
+    //     return $this->belongsTo('App\Models\Contracttype');
+    // }
     public function edutype()
     {
-        return $this->belongsTo('App\Models\Edutype');
+        return $this->belongsTo('App\Models\Mk\EduType');
     }
     public function country()
     {

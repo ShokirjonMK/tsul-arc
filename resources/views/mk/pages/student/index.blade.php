@@ -1,5 +1,6 @@
 @extends('mk.layouts.master')
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style type="text/css">
         .last-td {
             width: 100px;
@@ -19,7 +20,7 @@
                             Qo'shish </a>
                     </div>
 
-                    <form method="GET" action="{{ route('student.index') }}" class="mb-3 ml-5 mr-5">
+                    <form method="GET" action="{{ route('student.index') }}" class="mb-3 ml-5">
                         <div class="row">
                             <!-- Bitirgan yili filter -->
                             <div class="col-md-2">
@@ -67,7 +68,7 @@
                                     value="{{ request('fio') }}" placeholder="Ism, familiya yoki otasining ismi">
                             </div> --}}
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="fio">F.I.O bo‘yicha qidirish
                                     <i class="fa fa-info-circle text-primary" data-toggle="tooltip" data-placement="top"
                                         title="Masalan: 'abd sher' deb qidirsangiz 'Abdiyev Sherzod' natija chiqadi."></i>
@@ -79,9 +80,15 @@
 
 
                             <!-- Qidirish tugmasi -->
-                            <div class="col-md-3 align-self-end">
+                            <div class="col-md-2 align-self-end">
                                 <button type="submit" class="btn btn-primary">Filtrlash</button>
                                 <a href="{{ route('student.index') }}" class="btn btn-secondary">Tozalash</a>
+                            </div>
+                            <div class="col-md-2 align-self-end">
+                                <a href="{{ route('students.export-excel', request()->query()) }}" class="btn btn-success">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+
                             </div>
                         </div>
                     </form>

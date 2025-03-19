@@ -26,9 +26,21 @@ use App\Models\Mk\Room;
 use App\Models\Mk\StdOrder;
 use App\Models\Mk\StdOrderType;
 use PDF;
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class StudentController extends Controller
 {
+
+
+
+    public function exportExcel(Request $request)
+    {
+        $filters = $request->all();
+        return Excel::download(new StudentsExport($filters), 'students.xlsx');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -70,7 +82,8 @@ class StudentController extends Controller
         }
 
         // ID bo‘yicha kamayish tartibida saralash
-        $students = $query->orderBy('id', 'desc')->paginate(10);
+        // $students = $query->orderBy('id', 'desc')->paginate(10);
+        $students = $query->orderBy('id', 'desc')->paginate(10)->appends($request->query());
 
         return view('mk.pages.student.index', compact('students', 'eduTypes', 'eduForms'));
     }

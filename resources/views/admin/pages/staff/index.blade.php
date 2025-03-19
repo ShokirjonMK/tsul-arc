@@ -125,7 +125,9 @@
                                 <strong>Jami xodimlar soni: {{ $data->total() }}</strong>
                             </div>
                             <div>
-                                {{ $data->links() }}
+                                 {{ $data->appends(request()->except('page'))->links() }}
+                                {{-- {{ $data->appends(request()->query())->links() }} --}}
+                                {{-- {{ $data->links() }} --}}
                             </div>
                         </div>
                     </div>
@@ -138,6 +140,18 @@
     @section('js')
         {{-- JS kod sahifalashni yashirish uchun --}}
         <script>
+            // $(document).ready(function() {
+            //     $('.filter-form').on('submit', function(e) {
+            //         e.preventDefault();
+            //         let url = $(this).attr('action') + '?' + $(this).serialize();
+            //         window.history.pushState({}, '', url);
+            //         $.get(url, function(data) {
+            //             $('.table-container').html($(data).find('.table-container').html());
+            //         });
+            //     });
+            // });
+
+
             $(document).ready(function() {
                 let table = $('.data-table-export').DataTable();
                 table.destroy(); // Avvalgi DataTable'ni o‘chirish

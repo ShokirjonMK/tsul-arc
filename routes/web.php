@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Mk\StudentController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -51,10 +52,13 @@ Route::group([
     Route::get('/myshow-com/{id}', 'DocComController@myshow')->name('mk.doc.myshow.com');
 
     Route::resource('user', 'UserController');
-//    Route::resource('faculty', 'FacultyController');
+    //    Route::resource('faculty', 'FacultyController');
     Route::resource('direction', 'DirectionController');
     Route::resource('student', 'StudentController');
-    Route::get('student/pdf/{id}' , 'StudentController@student_pdf')->name('pdf.student');
+    Route::get('student/pdf/{id}', 'StudentController@student_pdf')->name('pdf.student');
+
+    Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])->name('students.export-excel');
+
 
     Route::post('student/order/{student_id}', 'StudentController@std_order')->name('std.order');
     Route::get('student/order/destroy/{id}', 'StudentController@std_order_delete')->name('std.order.destroy');
@@ -77,14 +81,14 @@ Route::group([
     'prefix' => 'backoffice',
     'namespace' => 'Admin',
     'middleware' => ['web', 'auth']
-], function (){
+], function () {
 
 
     Route::get('/', 'AdminController@index')->name('admin');
     Route::get('/strc', 'StructureController@index')->name('structure.strc');
     Route::resource('structure', 'StructureController');
     Route::resource('department', 'DepartmentController');
-//    Route::get('index/{id}', 'DepartmentController@index')->name('department.index');
+    //    Route::get('index/{id}', 'DepartmentController@index')->name('department.index');
     Route::resource('ie', 'IeController');
     Route::resource('stdep', 'StDepController');
     Route::post('department/edit/', 'DepartmentController@edit')->name('department.tahrir');
@@ -103,7 +107,7 @@ Route::group([
     Route::post('staff/workplace/', 'StaffController@workplace')->name('staff.workplace');
     Route::post('staff/inactivity/', 'StaffController@inactivity')->name('staff.inactivity');
     Route::post('staff/qualification/', 'StaffController@qualification')->name('staff.qualification');
-    Route::get('/resume-pdf/{id}' , 'StaffController@pdf_for_staff')->name('pdf_for_staff');
+    Route::get('/resume-pdf/{id}', 'StaffController@pdf_for_staff')->name('pdf_for_staff');
     Route::post('staff/mukofot/', 'StaffController@mukofot')->name('staff.mukofot');
     Route::post('staff/get-staff/', 'StaffController@get_staff')->name('staff.get_staff');
     Route::post('staff/fire-staff/', 'StaffController@fire_staff')->name('staff.fire_staff');
@@ -111,22 +115,21 @@ Route::group([
     Route::get('/test', function () {
         return view('admin.welcome');
     })->name('test');
-// Route::get('/', 'AdminController@index')->name('admin');
+    // Route::get('/', 'AdminController@index')->name('admin');
 
-//
+    //
     Route::get('/resume', function () {
         return view('admin.pages.staff.resume');
     });
 
 
     //other
-    Route::get('/get-areas/{id}' , 'RegionController@get_areas')->name('get_areas');
-    Route::get('/get-regions/{id}' , 'RegionController@get_regions')->name('get_regions');
+    Route::get('/get-areas/{id}', 'RegionController@get_areas')->name('get_areas');
+    Route::get('/get-regions/{id}', 'RegionController@get_regions')->name('get_regions');
 
-    Route::get('/clear' , function(){
+    Route::get('/clear', function () {
         return Artisan::call('config:cache');
     });
-
 });
 
 
