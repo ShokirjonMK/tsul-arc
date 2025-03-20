@@ -364,6 +364,15 @@ class StudentController extends Controller
         //        ])->download($staff->last_name.$staff->first_name.'.pdf');
     }
 
+    public function std_order_delete($id)
+    {
+        $order = StdOrder::findOrFail($id);
+
+        $order->delete();
+
+        return redirect()->back();
+    }
+
     public function std_order(Request $request, $student_id)
     {
         $input = $request->all();
