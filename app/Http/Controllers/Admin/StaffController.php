@@ -33,6 +33,7 @@ use App\Models\Degree;
 use App\Models\StDep;
 use App\Models\Staff;
 use App\Models\Area;
+use App\Models\CommandType;
 use App\Models\Lang;
 use App\Models\Mk\Room;
 use PDF;
@@ -270,6 +271,7 @@ class StaffController extends Controller
         $qualification_info = QualificationInfo::where('staff_id', $id)->get();
         $mukofot_staff = Mukofot::where('staff_id', $id)->where('status', 1)->get();
 
+        $command_types = CommandType::where('is_deleted', 0)->get();
         $inactivity_types = InactivityType::where('status', 1)->get();
 
         $department = Department::select('id', 'name', 'count_workers')->get();
@@ -306,6 +308,7 @@ class StaffController extends Controller
             'mukofot_type' => $mukofot_type,
             'inactivities' => $inactivities,
             'RelarivesType' => $RelarivesType,
+            'command_types' => $command_types,
             'is_worker_now_all' => $is_worker_now,
             'mukofot_staff' => $mukofot_staff,
             'inactivity_types' => $inactivity_types,
