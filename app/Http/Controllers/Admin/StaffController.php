@@ -566,11 +566,13 @@ class StaffController extends Controller
         $special_degree = SpecialDegree::where('status', 1)->get();
         $language = Lang::where('status', 1)->get();
 
+        $rooms = Room::all();
         // return $nationalities;
         return view('admin.pages.staff.edit', [
             'education' => $education,
             'regions' => $regions,
             'areas' => $area,
+            'rooms' => $rooms,
             'countries' => $country,
             'stavka' => $stavka,
             'partiya' => $partiya,
