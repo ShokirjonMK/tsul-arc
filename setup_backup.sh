@@ -1,35 +1,67 @@
 #!/bin/bash
+
 # 1. Yangi joyni aniqlash
 TARGET_DIR="/opt/backup"
+MK_SOURCE="./backup/mk.sh"
+MK_TARGET="$TARGET_DIR/mk.sh"
 
-# 2. Agar katalog mavjud bo'lmasa, yaratish
-mkdir -p "$TARGET_DIR"
-
-# 3. Eski skriptni yangi joyga ko'chirish
-cp ./backup/mk.sh "$TARGET_DIR/mk.sh"
-
-# Loyiha katalogini aniqlash
-PROJECT_PATH=$(pwd)
-
-# `.env` faylga `PROJECT_PATH` mavjudligini tekshirish va qo‘shish
-if ! grep -q "PROJECT_PATH=" "$PROJECT_PATH/.env"; then
-    echo "PROJECT_PATH=$PROJECT_PATH" >> "$PROJECT_PATH/.env"
-    echo ".env faylga PROJECT_PATH qo‘shildi: $PROJECT_PATH"
-else
-    echo "PROJECT_PATH allaqachon mavjud: $(grep 'PROJECT_PATH' "$PROJECT_PATH/.env")"
+# 2. Katalogni yaratish (agar mavjud bo'lmasa)
+if [ ! -d "$TARGET_DIR" ]; then
+    echo "[INFO] $TARGET_DIR katalogi yaratilmoqda..."
+    mkdir -p "$TARGET_DIR"
 fi
 
-# Backup skriptga bajarish ruxsatini berish
-chmod +x "$TARGET_DIR/mk.sh"
+# 3. Eski skript mavjudligini tekshirish va ko‘chirish
+if [ -f "$MK_SOURCE" ]; then
+    echo "[INFO] $MK_SOURCE fayli ko'chirilmoqda -> $MK_TARGET"
+    cp "$MK_SOURCE" "$MK_TARGET"
+else
+    echo "[XATO] $MK_SOURCE topilmadi. Skriptni to‘liq ko‘chira olmadim."
+    exit 1
+fi
 
-# Backup skriptni hoziroq ishga tushirish
-echo "Backup skripti ishga tushirilmoqda..."
-"$PROJECT_PATH/backup/mk.sh"
+# 4. Loyihaning joriy joyi
+PROJECT_PATH=$(pwd)
+ENV_FILE="$PROJECT_PATH/.env"
 
-# Cron job qo'shish
-CRON_JOB="2 * * * * $TARGET_DIR/mk.sh"
+# 5. .env fayl mavjudligini tekshirish va yaratish
+if [ ! -f "$ENV_FILE" ]; then
+    touch "$ENV_FILE"
+    echo "[INFO] .env fayli yaratildi."
+fi
 
-# Cron job allaqachon mavjudligini tekshirish va qo'shish
-(crontab -l 2>/dev/null | grep -F "$CRON_JOB") || (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+# 6. PROJECT_PATH ni .env faylga yozish (agar yo'q bo'lsa)
+if ! grep -q "^PROJECT_PATH=" "$ENV_FILE"; then
+    echo "PROJECT_PATH=$PROJECT_PATH" >> "$ENV_FILE"
+    echo "[INFO] .env faylga PROJECT_PATH yozildi: $PROJECT_PATH"
+else
+    echo "[INFO] .env faylida PROJECT_PATH allaqachon mavjud."
+fi
 
-echo "Backup skripti uchun ruxsat berildi, ishga tushirildi va cron job qo‘shildi."
+# 7. Ruxsat berish
+if chmod +x "$MK_TARGET"; then
+    echo "[INFO] $MK_TARGET bajariladigan qilindi."
+else
+    echo "[XATO] $MK_TARGET ga ruxsat berilmadi!"
+    exit 1
+fi
+
+# 8. Hozir ishga tushirish (manbadan emas, endi yangi joydan)
+echo "[INFO] Backup skripti ishga tushirilmoqda..."
+if "$MK_TARGET"; then
+    echo "[INFO] Backup skript muvaffaqiyatli ishga tushdi."
+else
+    echo "[XATO] Backup skript bajarishda xatolik yuz berdi."
+    exit 1
+fi
+
+# 9. Cron job qo‘shish (har 2 soatda)
+CRON_JOB="0 2 * * * $MK_TARGET"
+if crontab -l 2>/dev/null | grep -Fq "$CRON_JOB"; then
+    echo "[INFO] Cron job allaqachon mavjud."
+else
+    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+    echo "[INFO] Cron job qo‘shildi: $CRON_JOB"
+fi
+
+echo "[✅] Hammasi tayyor. Backup avtomatlashtirildi va cron sozlandi."
