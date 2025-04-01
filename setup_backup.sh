@@ -22,7 +22,6 @@ else
     sed -i "1i$REPO_VAR_LINE" "$SOURCE_FILE"
 fi
 
-
 # 4. Maqsadli katalogni yaratish (agar mavjud bo'lmasa)
 if [ ! -d "$TARGET_DIR" ]; then
     echo "[INFO] $TARGET_DIR katalogi yaratilmoqda..."
