@@ -11,6 +11,15 @@ if [ ! -d "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR"
 fi
 
+# REPO_DIR_API o‘zgaruvchisi mavjudligini va bo‘sh emasligini tekshirish
+if [ -z "$REPO_DIR_API" ]; then
+    REPO_DIR_API=$(pwd)
+    echo "[INFO] REPO_DIR_API topilmadi. Joriy katalogdan foydalanilmoqda: $REPO_DIR_API"
+else
+    echo "[INFO] REPO_DIR_API mavjud: $REPO_DIR_API"
+fi
+
+
 # 3. Eski skript mavjudligini tekshirish va ko‘chirish
 if [ -f "$MK_SOURCE" ]; then
     echo "[INFO] $MK_SOURCE fayli ko'chirilmoqda -> $MK_TARGET"
