@@ -12,13 +12,16 @@ if [ ! -f "$SOURCE_FILE" ]; then
     exit 1
 fi
 
-# 3. REPO_DIR_API bor-yo‘qligini tekshirib, bo'lmasa fayl boshiga qo'shish
-if ! grep -q 'REPO_DIR_API=' "$SOURCE_FILE"; then
-    echo "[INFO] REPO_DIR_API topilmadi. Qo‘shilmoqda..."
+# 3. REPO_DIR_API bor-yo‘qligini tekshirib, commentga olib, yangisini boshiga qo‘shish
+if grep -q '^REPO_DIR_API=' "$SOURCE_FILE"; then
+    echo "[INFO] Eski REPO_DIR_API topildi. Uni commentga olayapman va yangisini qo‘shaman..."
+    sed -i 's/^REPO_DIR_API=/#&/' "$SOURCE_FILE"
     sed -i "1i$REPO_VAR_LINE" "$SOURCE_FILE"
 else
-    echo "[INFO] REPO_DIR_API allaqachon mavjud."
+    echo "[INFO] REPO_DIR_API topilmadi. Yangi qator qo‘shilmoqda..."
+    sed -i "1i$REPO_VAR_LINE" "$SOURCE_FILE"
 fi
+
 
 # 4. Maqsadli katalogni yaratish (agar mavjud bo'lmasa)
 if [ ! -d "$TARGET_DIR" ]; then
