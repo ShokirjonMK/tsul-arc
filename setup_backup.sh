@@ -1,4 +1,12 @@
 #!/bin/bash
+# 1. Yangi joyni aniqlash
+TARGET_DIR="/opt/backup"
+
+# 2. Agar katalog mavjud bo'lmasa, yaratish
+mkdir -p "$TARGET_DIR"
+
+# 3. Eski skriptni yangi joyga ko'chirish
+cp ./backup/mk.sh "$TARGET_DIR/mk.sh"
 
 # Loyiha katalogini aniqlash
 PROJECT_PATH=$(pwd)
@@ -12,14 +20,14 @@ else
 fi
 
 # Backup skriptga bajarish ruxsatini berish
-chmod +x "$PROJECT_PATH/backup/mk.sh"
+chmod +x "$TARGET_DIR/mk.sh"
 
 # Backup skriptni hoziroq ishga tushirish
 echo "Backup skripti ishga tushirilmoqda..."
 "$PROJECT_PATH/backup/mk.sh"
 
 # Cron job qo'shish
-CRON_JOB="2 * * * * $PROJECT_PATH/backup/mk.sh"
+CRON_JOB="2 * * * * $TARGET_DIR/mk.sh"
 
 # Cron job allaqachon mavjudligini tekshirish va qo'shish
 (crontab -l 2>/dev/null | grep -F "$CRON_JOB") || (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
