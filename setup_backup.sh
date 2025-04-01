@@ -1,76 +1,61 @@
 #!/bin/bash
 
-# 1. Yangi joyni aniqlash
+# 1. O'zgaruvchilar
+SOURCE_FILE="./backup/mk.sh"
 TARGET_DIR="/opt/backup"
-MK_SOURCE="./backup/mk.sh"
-MK_TARGET="$TARGET_DIR/mk.sh"
+TARGET_FILE="$TARGET_DIR/mk.sh"
+REPO_VAR_LINE='REPO_DIR_API=$(pwd)'
 
-# 2. Katalogni yaratish (agar mavjud bo'lmasa)
+# 2. Tekshirish: manba fayl mavjudmi?
+if [ ! -f "$SOURCE_FILE" ]; then
+    echo "[XATO] $SOURCE_FILE topilmadi. Chiqa olmayapman."
+    exit 1
+fi
+
+# 3. REPO_DIR_API bor-yo‘qligini tekshirib, bo'lmasa fayl boshiga qo'shish
+if ! grep -q 'REPO_DIR_API=' "$SOURCE_FILE"; then
+    echo "[INFO] REPO_DIR_API topilmadi. Qo‘shilmoqda..."
+    sed -i "1i$REPO_VAR_LINE" "$SOURCE_FILE"
+else
+    echo "[INFO] REPO_DIR_API allaqachon mavjud."
+fi
+
+# 4. Maqsadli katalogni yaratish (agar mavjud bo'lmasa)
 if [ ! -d "$TARGET_DIR" ]; then
     echo "[INFO] $TARGET_DIR katalogi yaratilmoqda..."
     mkdir -p "$TARGET_DIR"
 fi
 
-# REPO_DIR_API o‘zgaruvchisi mavjudligini va bo‘sh emasligini tekshirish
-if [ -z "$REPO_DIR_API" ]; then
-    REPO_DIR_API=$(pwd)
-    echo "[INFO] REPO_DIR_API topilmadi. Joriy katalogdan foydalanilmoqda: $REPO_DIR_API"
-else
-    echo "[INFO] REPO_DIR_API mavjud: $REPO_DIR_API"
-fi
+# 5. Faylni yangi joyga nusxalash
+cp "$SOURCE_FILE" "$TARGET_FILE"
+chmod +x "$TARGET_FILE"
+echo "[INFO] $TARGET_FILE bajariladigan qilindi."
 
-
-# 3. Eski skript mavjudligini tekshirish va ko‘chirish
-if [ -f "$MK_SOURCE" ]; then
-    echo "[INFO] $MK_SOURCE fayli ko'chirilmoqda -> $MK_TARGET"
-    cp "$MK_SOURCE" "$MK_TARGET"
-else
-    echo "[XATO] $MK_SOURCE topilmadi. Skriptni to‘liq ko‘chira olmadim."
-    exit 1
-fi
-
-# 4. Loyihaning joriy joyi
-PROJECT_PATH=$(pwd)
-ENV_FILE="$PROJECT_PATH/.env"
-
-# 5. .env fayl mavjudligini tekshirish va yaratish
-if [ ! -f "$ENV_FILE" ]; then
-    touch "$ENV_FILE"
-    echo "[INFO] .env fayli yaratildi."
-fi
-
-# 6. PROJECT_PATH ni .env faylga yozish (agar yo'q bo'lsa)
-if ! grep -q "^PROJECT_PATH=" "$ENV_FILE"; then
-    echo "PROJECT_PATH=$PROJECT_PATH" >> "$ENV_FILE"
-    echo "[INFO] .env faylga PROJECT_PATH yozildi: $PROJECT_PATH"
-else
-    echo "[INFO] .env faylida PROJECT_PATH allaqachon mavjud."
-fi
-
-# 7. Ruxsat berish
-if chmod +x "$MK_TARGET"; then
-    echo "[INFO] $MK_TARGET bajariladigan qilindi."
-else
-    echo "[XATO] $MK_TARGET ga ruxsat berilmadi!"
-    exit 1
-fi
-
-# 8. Hozir ishga tushirish (manbadan emas, endi yangi joydan)
+# 6. Yangi skriptni ishga tushurish
 echo "[INFO] Backup skripti ishga tushirilmoqda..."
-if "$MK_TARGET"; then
-    echo "[INFO] Backup skript muvaffaqiyatli ishga tushdi."
+if "$TARGET_FILE"; then
+    echo "[INFO] Backup muvaffaqiyatli ishga tushdi."
 else
-    echo "[XATO] Backup skript bajarishda xatolik yuz berdi."
+    echo "[XATO] Backup skript ishida muammo."
     exit 1
 fi
 
-# 9. Cron job qo‘shish (har 2 soatda)
-CRON_JOB="0 2 * * * $MK_TARGET"
-if crontab -l 2>/dev/null | grep -Fq "$CRON_JOB"; then
-    echo "[INFO] Cron job allaqachon mavjud."
-else
-    (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
-    echo "[INFO] Cron job qo‘shildi: $CRON_JOB"
-fi
+# 7. Cron job yozish
+CRON_JOB="0 2 * * * $TARGET_FILE"
+CRONTAB_TMP=$(mktemp)
 
-echo "[✅] Hammasi tayyor. Backup avtomatlashtirildi va cron sozlandi."
+# Eski `mk.sh` ga oid yozuvlarni commentga olish
+crontab -l 2>/dev/null | while read -r line; do
+    if echo "$line" | grep -Fq "mk.sh"; then
+        echo "# $line" >> "$CRONTAB_TMP"
+    else
+        echo "$line" >> "$CRONTAB_TMP"
+    fi
+done
+
+# Yangi cron jobni qo‘shish
+echo "$CRON_JOB" >> "$CRONTAB_TMP"
+crontab "$CRONTAB_TMP"
+rm "$CRONTAB_TMP"
+
+echo "[✅] Cron job yangilandi: $CRON_JOB"
