@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MkPinflController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,35 +15,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::post('testapi', function (Request $request) {
-//    return $request;
-    return response()->json($request, 200);
-});
 
 
+// Route::middleware('auth.basic')->group(function () {
+//     Route::post('/mk/pnfl', [MkPinflController::class, 'handle']);
+// });
+
+Route::post('/mk/pinfl', [MkPinflController::class, 'handle'])->name('mk.pinfl');
 
 
-Route::group([
-    'prefix' => 'v1',
-    'namespace' => 'Admin',
-    'middleware' => ['token']
-], function (){
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-//      Route::get('muhammadjon' , 'ApiController@muhammadjon')->name('muhammadjon');
+// Route::post('testapi', function (Request $request) {
+// //    return $request;
+//     return response()->json($request, 200);
+// });
 
-    Route::resource("/sen","ApiController");
+
+
+
+// Route::group([
+//     'prefix' => 'v1',
+//     'namespace' => 'Admin',
+//     'middleware' => ['token']
+// ], function (){
+
+// //      Route::get('muhammadjon' , 'ApiController@muhammadjon')->name('muhammadjon');
+
+//     Route::resource("/sen","ApiController");
 
     
-Route::get('api', function () {
-//    $ssss = [];
-    $ssss = App\Models\Staff::select('id', 'last_name', 'first_name', 'middle_name', 'phone', 'passport_seria', 'passport_number')->get();
+// Route::get('api', function () {
+// //    $ssss = [];
+//     $ssss = App\Models\Staff::select('id', 'last_name', 'first_name', 'middle_name', 'phone', 'passport_seria', 'passport_number')->get();
 
-        return response()->json($ssss, 200);
-});
+//         return response()->json($ssss, 200);
+// });
 
-});
-
+// });
