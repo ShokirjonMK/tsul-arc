@@ -27,6 +27,10 @@ class MkPinflController extends Controller
                 'message' => 'pinfl noto‘g‘ri'
             ], 400);
         }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'pinfl noto‘g‘ri'
+        ], 400);
 
         $result = $this->getDataFromAdliya($pinfl, '2000-01-01');
         return response()->json($result, $result['status'] ? 200 : 500);
